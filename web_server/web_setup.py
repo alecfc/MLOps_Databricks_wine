@@ -119,7 +119,7 @@ def index():
  ' New York',
  ' Loire Valley']
     
-    return render_template('index.html', wineries=wineries, categories=categories, varietals=varietals, alcohol_percentages=alcohol_percentages, prices=prices, countries=countries, regions=regions)
+    return render_template('index.html', wineries=wineries, categories=categories, varietals=varietals, alcohol_percentages=alcohol_percentages, countries=countries, regions=regions)
 
 @app.route('/results')
 def results():

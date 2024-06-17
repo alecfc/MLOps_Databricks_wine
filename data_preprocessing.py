@@ -14,7 +14,7 @@ from pyspark.sql.types import *
 
 # COMMAND ----------
 
-my_name = <enter your name here>
+#my_name = <enter your name here>
 
 # COMMAND ----------
 
@@ -42,9 +42,10 @@ df.describe()
 
 # COMMAND ----------
 
-df = (df.withColumn("country", F.element_at(F.split(F.col("appellation"), ","), -1))
-                    .withColumn("region", F.element_at(F.split(F.col("appellation"), ","), -2))
+df = (df.withColumn("country", F.trim(F.element_at(F.split(F.col("appellation"), ","), -1)))
+                    .withColumn("region", F.trim(F.element_at(F.split(F.col("appellation"), ","), -2)))
                   )
+df = df.filter(df.region.contains("$") == False)
 df.display()
 
 # COMMAND ----------
@@ -57,6 +58,8 @@ df.display()
 df = df.na.drop(subset = ['alcohol'])
 df = (df.withColumn('alcohol', F.regexp_replace('alcohol', '%', '').cast(DecimalType(20,1)))
         .withColumn('price', F.regexp_replace('price', '\$', '').cast(DecimalType(20,0)))
+        .withColumnRenamed('varietal', 'grape variety')
+        .withColumnRenamed('designation', 'name')
         .withColumn('rating', df.rating.cast(IntegerType()))
 )
 df.display()

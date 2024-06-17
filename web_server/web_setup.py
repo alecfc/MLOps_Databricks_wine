@@ -12,7 +12,6 @@ app = Flask(__name__)
 def index():
     if request.method == 'POST':
         # Process form data
-        selected_wine = request.form['wine']
         selected_winery = request.form['winery']
         selected_category = request.form['category']
         selected_varietal = request.form['varietal']
@@ -40,18 +39,18 @@ def index():
                 ],
                 "data": [
                 [
-                    "wine",
-                    "moli parallada",
-                    "sparkling",
+                    "",
+                    selected_winery,
+                    selected_category,
                     "designation",
-                    "cava brut",
+                    selected_varietal,
                     "",
                     11.5,
                     11,
                     "Mathijs",
                     "lekker bubbeltje, beetje te droog voor mij",
-                    "Spain",
-                    "Barcelona"
+                    selected_country,
+                    selected_region
                 ]
                 ]
             }
@@ -65,22 +64,62 @@ def index():
         # Use the json module to load CKAN's response into a dictionary.
         response_dict = json.loads(response.text)
         
-        return redirect(url_for('results', wine=selected_wine, winery=selected_winery, category=selected_category,
+        return redirect(url_for('results', winery=selected_winery, category=selected_category,
                                         varietal=selected_varietal, alcohol_percentage=selected_alcohol_percentage,
                                         price=selected_price, country=selected_country, region=selected_region, rating=response_dict['predictions']))
 
     
     # Hardcoded options for the dropdowns
-    wines = ['Wine1', 'Wine2', 'Wine3']
-    wineries = ['Winery1', 'Winery2', 'Winery3']
-    categories = ['Red', 'White', 'Rosé']
-    varietals = ['Varietal1', 'Varietal2', 'Varietal3']
+    wineries = ['Williams Selyem',
+                'DFJ Vinhos',
+                'Wines & Winemakers',
+                'Testarossa',
+                'Kendall-Jackson',
+                'Concha y Toro',
+                'Chateau Ste. Michelle',
+                'Gary Farrell',
+                'Louis Jadot',
+                'Georges Duboeuf',
+                'Dr. Loosen',
+                'Maryhill',
+                'V. Sattui',
+                'Montes',
+                'Kenwood']
+    categories = ['Red', 'White', 'Sparkling', 'Rose', 'Dessert', 'Port/Sherry', 'Fortified']
+    varietals = ['Pinot Noir',
+                'Chardonnay',
+                'Cabernet Sauvignon',
+                'Red Blends, Red Blends',
+                'Bordeaux-style Red Blend',
+                'Sauvignon Blanc',
+                'Riesling',
+                'Rosé',
+                'Merlot',
+                'Zinfandel',
+                'Sangiovese',
+                'Nebbiolo',
+                'Malbec',
+                'Sparkling Blend, Sparkling',
+                'Portuguese Red']
     alcohol_percentages = ['<12%', '12-14%', '14-16%', '>16%']
-    prices = ['<10$', '10$-20$', '20$-30$', '>30$']
-    countries = ['Country1', 'Country2', 'Country3']
-    regions = ['Region1', 'Region2', 'Region3']
+    countries = ['US', 'Chile', 'Spain', 'France', 'Italy', 'Portugal', 'Australia', 'South Africa', 'Argentina', 'Germany', 'Austria', 'Israel', 'New Zealand', 'Greece', 'Romania', 'Hungary']
+    regions = [' California',
+ ' Washington',
+ ' Tuscany',
+ ' Oregon',
+ ' Bordeaux',
+ ' Northern Spain',
+ ' Burgundy',
+ ' Piedmont',
+ ' Mendoza Province',
+ ' Veneto',
+ ' Rhône Valley',
+ ' Alsace',
+ ' South Australia',
+ ' New York',
+ ' Loire Valley']
     
-    return render_template('index.html', wines=wines, wineries=wineries, categories=categories, varietals=varietals, alcohol_percentages=alcohol_percentages, prices=prices, countries=countries, regions=regions)
+    return render_template('index.html', wineries=wineries, categories=categories, varietals=varietals, alcohol_percentages=alcohol_percentages, prices=prices, countries=countries, regions=regions)
 
 @app.route('/results')
 def results():
@@ -95,7 +134,7 @@ def results():
     rating = request.args.get('rating')
 
     
-    return render_template('results.html', wine=wine, winery=winery, category=category,
+    return render_template('results.html', winery=winery, category=category,
                            varietal=varietal, alcohol_percentage=alcohol_percentage,
                            price=price, country=country, region=region, rating=rating)
 

@@ -13,13 +13,13 @@
         <div class="card mt-4">
             <div class="card-body">
                 <h5 class="card-title">{{ wine }}</h5>
-                <p class="card-text"><strong>Winery:</strong> {{ winery }}</p>
                 <p class="card-text"><strong>Category:</strong> {{ category }}</p>
-                <p class="card-text"><strong>Varietal:</strong> {{ varietal }}</p>
-                <p class="card-text"><strong>Alcohol Percentage:</strong> {{ alcohol_percentage }}</p>
-                <p class="card-text"><strong>Price:</strong> {{ price }}</p>
+                <p class="card-text"><strong>Grape variety:</strong> {{ varietal }}</p>
+                <p class="card-text"><strong>Winery:</strong> {{ winery }}</p>
                 <p class="card-text"><strong>Country:</strong> {{ country }}</p>
                 <p class="card-text"><strong>Region:</strong> {{ region }}</p>
+                <p class="card-text"><strong>Alcohol percentage:</strong> {{ alcohol_percentage }}</p>
+                <p class="card-text"><strong>Price:</strong> {{ price }}</p>
                 <p class="card-text"><strong>Rating:</strong> {{ rating }}</p>
                 <a href="{{ url_for('index') }}" class="btn btn-primary">Select Again</a>
             </div>

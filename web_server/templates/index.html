@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wine Selector</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Voer kenmerken van jouw wijn in om een rating te krijgen</h1>
+        <form method="POST" class="mt-4">
+            <div class="form-group">
+                <label for="wine">Wine:</label>
+                <select id="wine" name="wine" class="form-control">
+                    {% for wine in wines %}
+                    <option value="{{ wine }}">{{ wine }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="winery">Winery:</label>
+                <select id="winery" name="winery" class="form-control">
+                    {% for winery in wineries %}
+                    <option value="{{ winery }}">{{ winery }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="category">Category:</label>
+                <select id="category" name="category" class="form-control">
+                    {% for category in categories %}
+                    <option value="{{ category }}">{{ category }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="varietal">Varietal:</label>
+                <select id="varietal" name="varietal" class="form-control">
+                    {% for varietal in varietals %}
+                    <option value="{{ varietal }}">{{ varietal }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="alcohol_percentage">Alcohol Percentage:</label>
+                <select id="alcohol_percentage" name="alcohol_percentage" class="form-control">
+                    {% for alcohol_percentage in alcohol_percentages %}
+                    <option value="{{ alcohol_percentage }}">{{ alcohol_percentage }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="price">Price:</label>
+                <select id="price" name="price" class="form-control">
+                    {% for price in prices %}
+                    <option value="{{ price }}">{{ price }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="country">Country:</label>
+                <select id="country" name="country" class="form-control">
+                    {% for country in countries %}
+                    <option value="{{ country }}">{{ country }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="region">Region:</label>
+                <select id="region" name="region" class="form-control">
+                    {% for region in regions %}
+                    <option value="{{ region }}">{{ region }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

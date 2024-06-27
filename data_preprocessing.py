@@ -6,11 +6,21 @@
 
 # COMMAND ----------
 
+import os
+import zipfile
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from pyspark.sql import functions as F
 from pyspark.sql.types import *
+
+# COMMAND ----------
+
+zip_file_path = 'data/wine_data.zip'
+# Extract the zip file
+if not os.path.exists('data/wine_first_batch.csv'):
+    with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
+        zip_ref.extractall('data')
 
 # COMMAND ----------
 
@@ -23,17 +33,21 @@ my_name = "alec"
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC First we read the data into a Spark dataframe and view the amount of rows and columns
+# MAGIC First we read the first batch data into a Spark dataframe and view the amount of rows and columns
 
 # COMMAND ----------
 
-df =  spark.read.option("delimiter", ",").option("header", True).csv("file:/Workspace/Users/alec.flesher-clark@brightcubes.nl/MLOps_Databricks_wine/data/wine.csv")
+df =  spark.read.option("delimiter", ",").option("header", True).csv("file:/Workspace/Users/alec.flesher-clark@brightcubes.nl/MLOps_Databricks_wine/data/wine_first_batch.csv")
 df.display()
 
 # COMMAND ----------
 
 print((df.count(), len(df.columns)))
 df.describe()
+
+# COMMAND ----------
+
+
 
 # COMMAND ----------
 
@@ -56,23 +70,41 @@ df.display()
 # COMMAND ----------
 
 df = df.na.drop(subset = ['alcohol'])
-df = (df.withColumn('alcohol', F.regexp_replace('alcohol', '%', '').cast(DecimalType(20,1)))
+df = (df.withColumn("id", F.monotonically_increasing_id())
+        .withColumn('alcohol', F.regexp_replace('alcohol', '%', '').cast(DecimalType(20,1)))
         .withColumn('price', F.regexp_replace('price', '\$', '').cast(DecimalType(20,0)))
-        .withColumnRenamed('varietal', 'grape variety')
-        .withColumnRenamed('designation', 'name')
+        .withColumnRenamed('varietal', 'grape_variety')
+        .withColumnRenamed('designation', 'wine_name')
         .withColumn('rating', df.rating.cast(IntegerType()))
+        .withColumn('year', df.year.cast(IntegerType()))
 )
+
+# Get the list of columns
+columns = df.columns
+
+# Reorder columns: move 'ID' to the front
+reordered_columns = ['id'] + [col for col in columns if col != 'id']
+
+# Select reordered columns
+df = df.select(reordered_columns)
 df.display()
 
 # COMMAND ----------
 
-# +df = df.replace({'N.V.': None}, subset=['year'])
+# df = df.replace({'N.V.': None}, subset=['year'])
 # df=df.dropna()
 # df.show()
+df.display()
 
 # COMMAND ----------
 
-df.createOrReplaceTempView('new_data')
+train, test = df.randomSplit([0.8,0.2], seed=42)
+test.display()
+
+# COMMAND ----------
+
+train.createOrReplaceTempView('train_data')
+test.createOrReplaceTempView('test_data')
 
 # COMMAND ----------
 
@@ -82,9 +114,19 @@ df.createOrReplaceTempView('new_data')
 # COMMAND ----------
 
 spark.sql(f"""
-MERGE INTO db_{my_name}.wine_data_{my_name}
-USING new_data
-ON wine_data_{my_name}.wine = new_data.wine
+MERGE INTO db_{my_name}.wine_train_data_{my_name}
+USING train_data
+ON wine_train_data_{my_name}.wine = train_data.wine
+WHEN MATCHED THEN
+  UPDATE SET *
+WHEN NOT MATCHED THEN
+  INSERT *
+""")
+
+spark.sql(f"""
+MERGE INTO db_{my_name}.wine_test_data_{my_name}
+USING test_data
+ON wine_test_data_{my_name}.wine = test_data.wine
 WHEN MATCHED THEN
   UPDATE SET *
 WHEN NOT MATCHED THEN
@@ -93,4 +135,5 @@ WHEN NOT MATCHED THEN
 
 # COMMAND ----------
 
-df.display()
+print((train.count(), len(train.columns)))
+print((test.count(), len(test.columns)))

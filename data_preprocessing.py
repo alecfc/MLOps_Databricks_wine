@@ -32,6 +32,16 @@ my_name = "alec"
 
 # COMMAND ----------
 
+spark.sql(f"""
+DROP TABLE IF EXISTS db_{my_name}.wine_test_data_{my_name}
+""")
+
+spark.sql(f"""
+DROP TABLE IF EXISTS db_{my_name}.wine_train_data_{my_name}
+""")
+
+# COMMAND ----------
+
 # MAGIC %md
 # MAGIC First we read the first batch data into a Spark dataframe and view the amount of rows and columns
 
@@ -44,10 +54,6 @@ df.display()
 
 print((df.count(), len(df.columns)))
 df.describe()
-
-# COMMAND ----------
-
-
 
 # COMMAND ----------
 
@@ -70,7 +76,7 @@ df.display()
 # COMMAND ----------
 
 df = df.na.drop(subset = ['alcohol'])
-df = (df.withColumn("id", F.monotonically_increasing_id())
+df = (df.withColumn("id", F.monotonically_increasing_id().cast(LongType()))
         .withColumn('alcohol', F.regexp_replace('alcohol', '%', '').cast(DecimalType(20,1)))
         .withColumn('price', F.regexp_replace('price', '\$', '').cast(DecimalType(20,0)))
         .withColumnRenamed('varietal', 'grape_variety')
@@ -87,13 +93,6 @@ reordered_columns = ['id'] + [col for col in columns if col != 'id']
 
 # Select reordered columns
 df = df.select(reordered_columns)
-df.display()
-
-# COMMAND ----------
-
-# df = df.replace({'N.V.': None}, subset=['year'])
-# df=df.dropna()
-# df.show()
 df.display()
 
 # COMMAND ----------
@@ -116,7 +115,7 @@ test.createOrReplaceTempView('test_data')
 spark.sql(f"""
 MERGE INTO db_{my_name}.wine_train_data_{my_name}
 USING train_data
-ON wine_train_data_{my_name}.wine = train_data.wine
+ON wine_train_data_{my_name}.id = train_data.id
 WHEN MATCHED THEN
   UPDATE SET *
 WHEN NOT MATCHED THEN
@@ -126,7 +125,7 @@ WHEN NOT MATCHED THEN
 spark.sql(f"""
 MERGE INTO db_{my_name}.wine_test_data_{my_name}
 USING test_data
-ON wine_test_data_{my_name}.wine = test_data.wine
+ON wine_test_data_{my_name}.id = test_data.id
 WHEN MATCHED THEN
   UPDATE SET *
 WHEN NOT MATCHED THEN

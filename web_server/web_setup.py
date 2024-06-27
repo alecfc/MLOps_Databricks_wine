@@ -2,8 +2,6 @@ from flask import Flask, render_template, request, redirect, url_for
 import requests
 import json
 
-url = "https://adb-2310926350007386.6.azuredatabricks.net/serving-endpoints/alec_math/invocations"
-
 app = Flask(__name__)
 
 
@@ -12,26 +10,32 @@ app = Flask(__name__)
 def index():
     if request.method == 'POST':
         # Process form data
+        selected_url = request.form['model_url']
+        selected_year = int(request.form['year'])
         selected_winery = request.form['winery']
         selected_category = request.form['category']
         selected_varietal = request.form['varietal']
         selected_alcohol_percentage = request.form['alcohol_percentage']
-        selected_price = request.form['price']
         selected_country = request.form['country']
         selected_region = request.form['region']
         # You can add logic to process these inputs
+        if selected_alcohol_percentage == '':
+            selected_alcohol_percentage = 12
 
         payload = json.dumps({
             "dataframe_split": {
                 "columns": [
+                "id",
+                "year",
                 "wine",
                 "winery",
                 "category",
+                "wine_name",
                 "designation",
-                "varietal",
+                "grape_variety",
                 "appellation",
                 "alcohol",
-                "price",
+                "rating",
                 "reviewer",
                 "review",
                 "country",
@@ -39,16 +43,19 @@ def index():
                 ],
                 "data": [
                 [
-                    "",
+                    None,
+                    selected_year,
+                    None,
                     selected_winery,
                     selected_category,
-                    "designation",
+                    None,
+                    None,
                     selected_varietal,
-                    "",
-                    11.5,
-                    11,
-                    "Mathijs",
-                    "lekker bubbeltje, beetje te droog voor mij",
+                    None,
+                    selected_alcohol_percentage,
+                    85,
+                    None,
+                    None,
                     selected_country,
                     selected_region
                 ]
@@ -60,13 +67,13 @@ def index():
         'Authorization': 'Basic dG9rZW46ZGFwaTczYTRjYzMwY2Q0YWFmZmNiZDdhN2E5YTAyYTM1MTVmLTI='
         }
 
-        response = requests.request("POST", url, headers=headers, data=payload)
+        response = requests.request("POST", selected_url, headers=headers, data=payload)
         # Use the json module to load CKAN's response into a dictionary.
         response_dict = json.loads(response.text)
         
         return redirect(url_for('results', winery=selected_winery, category=selected_category,
                                         varietal=selected_varietal, alcohol_percentage=selected_alcohol_percentage,
-                                        price=selected_price, country=selected_country, region=selected_region, rating=response_dict['predictions']))
+                                        country=selected_country, region=selected_region, price=response_dict['predictions']))
 
     
     # Hardcoded options for the dropdowns
@@ -86,6 +93,7 @@ def index():
                 'Montes',
                 'Kenwood']
     categories = ['Red', 'White', 'Sparkling', 'Rose', 'Dessert', 'Port/Sherry', 'Fortified']
+    years = ['2020', '2019', '2018', '2017','2016', '2015', '2014', '2013', '2012', '2010', '2011', '2009', '2007', '2008', '2006', '2005', '2004', '2003', '2001', '2002', '2000']
     varietals = ['Pinot Noir',
                 'Chardonnay',
                 'Cabernet Sauvignon',
@@ -119,7 +127,7 @@ def index():
  ' New York',
  ' Loire Valley']
     
-    return render_template('index.html', wineries=wineries, categories=categories, varietals=varietals, alcohol_percentages=alcohol_percentages, countries=countries, regions=regions)
+    return render_template('index.html', years=years, wineries=wineries, categories=categories, varietals=varietals, alcohol_percentages=alcohol_percentages, countries=countries, regions=regions)
 
 @app.route('/results')
 def results():

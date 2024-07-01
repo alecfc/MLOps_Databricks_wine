@@ -1,13 +1,41 @@
 from flask import Flask, render_template, request, redirect, url_for
 import requests
 import json
+import pandas as pd
+import zipfile
 
 app = Flask(__name__)
+
+
+def get_field_values():
+    categories = ['Red', 'White', 'Sparkling', 'Rose', 'Dessert', 'Port/Sherry', 'Fortified']
+    countries = ['US', 'Chile', 'Spain', 'France', 'Italy', 'Portugal', 'Australia', 'South Africa', 'Argentina', 'Germany', 'Austria', 'Israel', 'New Zealand', 'Greece', 'Romania', 'Hungary']
+    regions = [' California',
+        ' Washington',
+        ' Tuscany',
+        ' Oregon',
+        ' Bordeaux',
+        ' Northern Spain',
+        ' Burgundy',
+        ' Piedmont',
+        ' Mendoza Province',
+        ' Veneto',
+        ' Rhône Valley',
+        ' Alsace',
+        ' South Australia',
+        ' New York',
+        ' Loire Valley']
+    zf = zipfile.ZipFile('/data/wine_data_zip') 
+    df = pd.read_csv(zf.open('wine_first_batch.csv'))
+    return available_categories, available_countries, available_regions
+
 
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    available_categories, available_countries, available_regions = get_field_values()
+
     if request.method == 'POST':
         # Process form data
         selected_url = request.form['model_url']
@@ -74,25 +102,6 @@ def index():
                                         varietal=selected_varietal, alcohol_percentage=selected_alcohol_percentage,
                                         country=selected_country, region=selected_region, price=response_dict['predictions']))
 
-    
-    categories = ['Red', 'White', 'Sparkling', 'Rose', 'Dessert', 'Port/Sherry', 'Fortified']
-    alcohol_percentages = ['<12%', '12-14%', '14-16%', '>16%']
-    countries = ['US', 'Chile', 'Spain', 'France', 'Italy', 'Portugal', 'Australia', 'South Africa', 'Argentina', 'Germany', 'Austria', 'Israel', 'New Zealand', 'Greece', 'Romania', 'Hungary']
-    regions = [' California',
- ' Washington',
- ' Tuscany',
- ' Oregon',
- ' Bordeaux',
- ' Northern Spain',
- ' Burgundy',
- ' Piedmont',
- ' Mendoza Province',
- ' Veneto',
- ' Rhône Valley',
- ' Alsace',
- ' South Australia',
- ' New York',
- ' Loire Valley']
     
     return render_template('index.html', categories=categories, alcohol_percentages=alcohol_percentages, countries=countries, regions=regions)
 

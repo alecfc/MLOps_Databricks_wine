@@ -64,51 +64,18 @@ def index():
             })
         headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic dG9rZW46ZGFwaTczYTRjYzMwY2Q0YWFmZmNiZDdhN2E5YTAyYTM1MTVmLTI='
+        'Authorization': "Bearer dapicbe66e05adbe91737c4d2d4d33114a8f-2"
         }
 
         response = requests.request("POST", selected_url, headers=headers, data=payload)
         # Use the json module to load CKAN's response into a dictionary.
         response_dict = json.loads(response.text)
-        
-        return redirect(url_for('results', winery=selected_winery, category=selected_category,
+        return redirect(url_for('results', winery=selected_winery, category=selected_category, year=str(selected_year),
                                         varietal=selected_varietal, alcohol_percentage=selected_alcohol_percentage,
                                         country=selected_country, region=selected_region, price=response_dict['predictions']))
 
     
-    # Hardcoded options for the dropdowns
-    wineries = ['Williams Selyem',
-                'DFJ Vinhos',
-                'Wines & Winemakers',
-                'Testarossa',
-                'Kendall-Jackson',
-                'Concha y Toro',
-                'Chateau Ste. Michelle',
-                'Gary Farrell',
-                'Louis Jadot',
-                'Georges Duboeuf',
-                'Dr. Loosen',
-                'Maryhill',
-                'V. Sattui',
-                'Montes',
-                'Kenwood']
     categories = ['Red', 'White', 'Sparkling', 'Rose', 'Dessert', 'Port/Sherry', 'Fortified']
-    years = ['2020', '2019', '2018', '2017','2016', '2015', '2014', '2013', '2012', '2010', '2011', '2009', '2007', '2008', '2006', '2005', '2004', '2003', '2001', '2002', '2000']
-    varietals = ['Pinot Noir',
-                'Chardonnay',
-                'Cabernet Sauvignon',
-                'Red Blends, Red Blends',
-                'Bordeaux-style Red Blend',
-                'Sauvignon Blanc',
-                'Riesling',
-                'Rosé',
-                'Merlot',
-                'Zinfandel',
-                'Sangiovese',
-                'Nebbiolo',
-                'Malbec',
-                'Sparkling Blend, Sparkling',
-                'Portuguese Red']
     alcohol_percentages = ['<12%', '12-14%', '14-16%', '>16%']
     countries = ['US', 'Chile', 'Spain', 'France', 'Italy', 'Portugal', 'Australia', 'South Africa', 'Argentina', 'Germany', 'Austria', 'Israel', 'New Zealand', 'Greece', 'Romania', 'Hungary']
     regions = [' California',
@@ -127,11 +94,11 @@ def index():
  ' New York',
  ' Loire Valley']
     
-    return render_template('index.html', years=years, wineries=wineries, categories=categories, varietals=varietals, alcohol_percentages=alcohol_percentages, countries=countries, regions=regions)
+    return render_template('index.html', categories=categories, alcohol_percentages=alcohol_percentages, countries=countries, regions=regions)
 
 @app.route('/results')
 def results():
-    wine = request.args.get('wine')
+    year = request.args.get('year')
     winery = request.args.get('winery')
     category = request.args.get('category')
     varietal = request.args.get('varietal')
@@ -142,7 +109,7 @@ def results():
     rating = request.args.get('rating')
 
     
-    return render_template('results.html', winery=winery, category=category,
+    return render_template('results.html', year=year, winery=winery, category=category,
                            varietal=varietal, alcohol_percentage=alcohol_percentage,
                            price=price, country=country, region=region, rating=rating)
 

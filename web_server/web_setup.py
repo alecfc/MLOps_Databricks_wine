@@ -3,38 +3,44 @@ import requests
 import json
 import pandas as pd
 import zipfile
+import os
+import numpy as np
 
 app = Flask(__name__)
 
+# Function to split on the second to last comma
+def split_on_second_last_comma(s):
+    s = str(s)
+    parts = s.split(', ', 2)
+    if len(parts) == 3:
+        return parts[1].strip()  # the region part
+    else:
+        return None  # or handle appropriately if not in expected format
 
 def get_field_values():
-    categories = ['Red', 'White', 'Sparkling', 'Rose', 'Dessert', 'Port/Sherry', 'Fortified']
-    countries = ['US', 'Chile', 'Spain', 'France', 'Italy', 'Portugal', 'Australia', 'South Africa', 'Argentina', 'Germany', 'Austria', 'Israel', 'New Zealand', 'Greece', 'Romania', 'Hungary']
-    regions = [' California',
-        ' Washington',
-        ' Tuscany',
-        ' Oregon',
-        ' Bordeaux',
-        ' Northern Spain',
-        ' Burgundy',
-        ' Piedmont',
-        ' Mendoza Province',
-        ' Veneto',
-        ' Rhône Valley',
-        ' Alsace',
-        ' South Australia',
-        ' New York',
-        ' Loire Valley']
-    zf = zipfile.ZipFile('/data/wine_data_zip') 
+    
+    available_categories = ['Red', 'White', 'Sparkling', 'Rose', 'Dessert', 'Port/Sherry', 'Fortified']
+    available_countries = ['US', 'Chile', 'Spain', 'France', 'Italy', 'Portugal', 'Australia', 'South Africa', 'Argentina', 'Germany', 'Austria', 'Israel', 'New Zealand', 'Greece', 'Romania', 'Hungary']
+    zf = zipfile.ZipFile(f'{os.getcwd()}/data/wine_data.zip') 
     df = pd.read_csv(zf.open('wine_first_batch.csv'))
-    return available_categories, available_countries, available_regions
+    year = df['year'].dropna().astype(np.int64).unique()
+    year = list(map(str, list(year) + [2017,2018,2019,2020,2021,2022,2023,2024]))
+
+    available_years = sorted(year, reverse=True)
+
+    # Apply function to the DataFrame
+    available_regions = list(df['appellation'].apply(split_on_second_last_comma).dropna().unique())
+    available_regions = sorted([ x for x in available_regions if "\$" not in x ])
+    available_grape_varieties = list(df['varietal'].dropna().unique())
+    available_grape_varieties = sorted([ y for y in available_grape_varieties if "$" not in y ])
+    return available_years, available_categories, available_countries, available_regions, available_grape_varieties
 
 
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    available_categories, available_countries, available_regions = get_field_values()
+    available_years, available_categories, available_countries, available_regions, available_grape_varieties = get_field_values()
 
     if request.method == 'POST':
         # Process form data
@@ -103,7 +109,8 @@ def index():
                                         country=selected_country, region=selected_region, price=response_dict['predictions']))
 
     
-    return render_template('index.html', categories=categories, alcohol_percentages=alcohol_percentages, countries=countries, regions=regions)
+    return render_template('index.html', years=available_years, categories=available_categories, varieties=available_grape_varieties,
+                           countries=available_countries, regions=available_regions)
 
 @app.route('/results')
 def results():

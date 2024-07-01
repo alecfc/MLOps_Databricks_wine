@@ -17,7 +17,10 @@
             </div>
             <div class="form-group">
                 <label for="year">Year:</label>
-                <input type="text" id="year" name="year" class="form-control" placeholder="Enter the year for your wine:">
+                <select id="year" name="year" class="form-control">
+                    {% for year in years %}
+                    <option value="{{ year }}">{{ year }}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div class="form-group">
@@ -29,8 +32,11 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="varietal">Grape Variety:</label>
-                <input type="text" id="varietal" name="varietal" class="form-control" placeholder="Enter which grape variety your wine consists of:">
+                <label for="variety">Grape Variety:</label>
+                <select id="variety" name="variety" class="form-control">
+                {% for variety in varieties %}
+                <option value="{{ variety }}">{{ variety }}</option>
+                {% endfor %}
                 </select>
             </div>
             <div class="form-group">

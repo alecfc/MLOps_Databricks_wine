@@ -2,7 +2,7 @@
 # MAGIC %md
 # MAGIC ### Data Preprocessing steps
 # MAGIC ** **
-# MAGIC In this notebook we execute some preprocessing steps to get the wine dataset ready for analysis and training. Some preprocessing steps can be improved, yielding to better model performances!
+# MAGIC In this notebook we execute some preprocessing steps to get the wine dataset ready for analysis and training. After the preprocessing steps, we update the created train and test tables identified by your name. Some preprocessing steps can be improved, yielding to better model performances!
 
 # COMMAND ----------
 
@@ -16,29 +16,21 @@ from pyspark.sql.types import *
 
 # COMMAND ----------
 
+# get value of data path
+dbutils.widgets.text(name="data_path", defaultValue="data/wine_first_batch.csv", label="data_path")
+data_path = dbutils.widgets.get("data_path")
+
+# get value of my_name
+dbutils.widgets.text(name="my_name", defaultValue="FILL IN YOUR NAME", label="my_name")
+my_name = dbutils.widgets.get("my_name")
+
+# COMMAND ----------
+
 zip_file_path = 'data/wine_data.zip'
 # Extract the zip file
-if not os.path.exists('data/wine_first_batch.csv'):
+if not os.path.exists(data_path):
     with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
         zip_ref.extractall('data')
-
-# COMMAND ----------
-
-#my_name = <enter your name here>
-
-# COMMAND ----------
-
-my_name = "alec"
-
-# COMMAND ----------
-
-spark.sql(f"""
-DROP TABLE IF EXISTS db_{my_name}.wine_test_data_{my_name}
-""")
-
-spark.sql(f"""
-DROP TABLE IF EXISTS db_{my_name}.wine_train_data_{my_name}
-""")
 
 # COMMAND ----------
 
@@ -71,7 +63,7 @@ df.display()
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC Drop the null values in the alcohol column and convert alcohol price and rating columns to decimals and integers
+# MAGIC For the train and test split, we need to add an id column. First, we drop the null values in the alcohol column. We also remove the % sign from the alcohol and the $ sign from the price and convert them to decimals.
 
 # COMMAND ----------
 
@@ -97,6 +89,11 @@ df.display()
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC Now we split the preprocessed wine data into train and test dataframes. We use the same seed of 42 to ensure similar experiments between groups in the workshop.
+
+# COMMAND ----------
+
 train, test = df.randomSplit([0.8,0.2], seed=42)
 test.display()
 
@@ -108,9 +105,11 @@ test.createOrReplaceTempView('test_data')
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC Merge preprocessed dataframe into a table uniquely identified by your name
+# MAGIC The final step is to merge preprocessed dataframe into a table uniquely identified by your name
 
 # COMMAND ----------
+
+spark.sql(f"use db_{my_name}")
 
 spark.sql(f"""
 MERGE INTO db_{my_name}.wine_train_data_{my_name}
@@ -136,3 +135,15 @@ WHEN NOT MATCHED THEN
 
 print((train.count(), len(train.columns)))
 print((test.count(), len(test.columns)))
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## Next steps
+# MAGIC
+# MAGIC We have usuable train and test tables to use for experiments! Now create an experiment with the train data using AutoML and find the best performing (least mean-absolute error) model!
+# MAGIC
+
+# COMMAND ----------
+
+

@@ -39,7 +39,12 @@ if not os.path.exists(data_path):
 
 # COMMAND ----------
 
-df =  spark.read.option("delimiter", ",").option("header", True).csv("file:/Workspace/Users/alec.flesher-clark@brightcubes.nl/MLOps_Databricks_wine/data/wine_first_batch.csv")
+cwd = os.getcwd()    
+print(cwd)
+
+# COMMAND ----------
+
+df =  spark.read.option("delimiter", ",").option("header", True).csv(f"file:{os.getcwd()}/{data_path}")
 df.display()
 
 # COMMAND ----------

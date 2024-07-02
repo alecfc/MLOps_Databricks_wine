@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/7e461391-8393-4830-ad5e-b3f836218516/resourceGroups/rg-webapp-wine/providers/Microsoft.Web/sites/brightcubeswine",
+    "appService.deploySubpath": "."
+}

@@ -2,7 +2,7 @@
 # MAGIC %md
 # MAGIC ### Data Preprocessing steps
 # MAGIC ** **
-# MAGIC In this notebook we execute some preprocessing steps to get the wine dataset ready for analysis and training. After the preprocessing steps, we update the created train and test tables identified by your name. Some preprocessing steps can be improved, yielding to better model performances!
+# MAGIC In this notebook we execute some preprocessing steps to get the wine dataset ready for analysis and training. After the preprocessing steps, we update the created train and test tables identified by your name. Still there are some preprocessing steps left to be done, so inspect the dataframe and its columns to see if you can improve the resulting train and test data. Improving the data will result in better model performances!
 
 # COMMAND ----------
 
@@ -16,13 +16,8 @@ from pyspark.sql.types import *
 
 # COMMAND ----------
 
-# get value of data path
-dbutils.widgets.text(name="data_path", defaultValue="data/wine_first_batch.csv", label="data_path")
-data_path = dbutils.widgets.get("data_path")
-
-# get value of my_name
-dbutils.widgets.text(name="my_name", defaultValue="FILL IN YOUR NAME", label="my_name")
-my_name = dbutils.widgets.get("my_name")
+data_path = 'data/wine_first_batch.csv'
+my_name = 'FILL_IN'
 
 # COMMAND ----------
 
@@ -35,12 +30,7 @@ if not os.path.exists(data_path):
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC First we read the first batch data into a Spark dataframe and view the amount of rows and columns
-
-# COMMAND ----------
-
-cwd = os.getcwd()    
-print(cwd)
+# MAGIC First we read the first batch data into a Spark dataframe and view the amount of rows and columns.
 
 # COMMAND ----------
 
@@ -110,7 +100,7 @@ test.createOrReplaceTempView('test_data')
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC The final step is to merge preprocessed dataframe into a table uniquely identified by your name
+# MAGIC The final step is to merge preprocessed dataframe into a table uniquely identified by your name.
 
 # COMMAND ----------
 
@@ -148,7 +138,3 @@ print((test.count(), len(test.columns)))
 # MAGIC
 # MAGIC We have usuable train and test tables to use for experiments! Now create an experiment with the train data using AutoML and find the best performing (least mean-absolute error) model!
 # MAGIC
-
-# COMMAND ----------
-
-

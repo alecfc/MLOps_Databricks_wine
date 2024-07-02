@@ -1,10 +1,11 @@
 # Databricks notebook source
 # MAGIC %md
 # MAGIC ### Database set-up
+# MAGIC These cells setup the database and tables for training and testing your wine price prediction model. In this notebook, you only have to fill in your name to uniquely identify your database!
 
 # COMMAND ----------
 
-my_name = 'alec'
+my_name = 'FILL_IN'
 
 # COMMAND ----------
 
@@ -55,4 +56,5 @@ spark.sql(f"""
 
 # COMMAND ----------
 
-
+# MAGIC %md
+# MAGIC Now everything is setup, view your database in the Catalog. Afterwards, it's time to preprocess and fill your tables with data.

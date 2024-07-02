@@ -33,14 +33,17 @@ def get_field_values():
     available_regions = sorted([ x for x in available_regions if "\$" not in x ])
     available_grape_varieties = list(df['varietal'].dropna().unique())
     available_grape_varieties = sorted([ y for y in available_grape_varieties if "$" not in y ])
-    return available_years, available_categories, available_countries, available_regions, available_grape_varieties
+
+    available_wineries = list(df['winery'].dropna().unique())
+
+    return available_years, available_categories, available_countries, available_regions, available_grape_varieties, available_wineries
 
 
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    available_years, available_categories, available_countries, available_regions, available_grape_varieties = get_field_values()
+    available_years, available_categories, available_countries, available_regions, available_grape_varieties, available_wineries = get_field_values()
 
     if request.method == 'POST':
         # Process form data
@@ -123,7 +126,7 @@ def index():
 
     
     return render_template('index.html', years=available_years, categories=available_categories, varieties=available_grape_varieties,
-                           countries=available_countries, regions=available_regions)
+                           countries=available_countries, regions=available_regions, wineries=available_wineries)
 
 @app.route('/results')
 def results():

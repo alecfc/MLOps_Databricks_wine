@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="text-center">Voer kenmerken van jouw wijn in:</h1>
+        <h1 class="text-center">Plak de URL van jouw model en voer kenmerken van jouw wijn in:</h1>
         <form method="POST" class="mt-4">
             <div class="form-group">
                 <label for="model_url">Model URL:</label>
@@ -42,16 +42,8 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="winery">Winery:</label>
-                    <input type="text" id="winery" name="winery" class="form-control" placeholder="Enter which winery produced your selected wine:">
-            </div>
-            <div class="form-group">
-                <label for="country">Country:</label>
-                <select id="country" name="country" class="form-control">
-                    {% for country in countries %}
-                    <option value="{{ country }}">{{ country }}</option>
-                    {% endfor %}
-                </select>
+                <label for="alcohol_percentage">Alcohol percentage:</label>
+                <input type="number" id="alcohol_percentage" name="alcohol_percentage" class="form-control" placeholder="Enter alcohol percentage as a decimal (. separated) without %">
             </div>
             <div class="form-group">
                 <label for="region">Region:</label>
@@ -62,8 +54,20 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="alcohol_percentage">Alcohol percentage:</label>
-                <input type="number" id="alcohol_percentage" name="alcohol_percentage" class="form-control" placeholder="Enter alcohol percentage as a decimal (. separated) without %">
+                <label for="country">Country:</label>
+                <select id="country" name="country" class="form-control">
+                    {% for country in countries %}
+                    <option value="{{ country }}">{{ country }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="winery">Winery:</label>
+                <select id="winery" name="winery" class="form-control">
+                    {% for winery in wineries %}
+                    <option value="{{ winery }}">{{ winery }}</option>
+                    {% endfor %}
+                </select>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>

@@ -5,7 +5,6 @@ import pandas as pd
 import zipfile
 import os
 import numpy as np
-from setuptools.extern import six
 
 app = Flask(__name__)
 

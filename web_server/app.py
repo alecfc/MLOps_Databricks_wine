@@ -5,7 +5,6 @@ import pandas as pd
 import zipfile
 import os
 import numpy as np
-from setuptools.extern import six
 
 app = Flask(__name__)
 
@@ -49,7 +48,7 @@ def index():
         selected_year = int(request.form['year'])
         selected_winery = request.form['winery']
         selected_category = request.form['category']
-        selected_varietal = request.form['varietal']
+        selected_varietal = request.form['variety']
         selected_alcohol_percentage = request.form['alcohol_percentage']
         selected_country = request.form['country']
         selected_region = request.form['region']
@@ -97,12 +96,25 @@ def index():
                 ]
             }
             })
-        headers = {
-        'Content-Type': 'application/json',
-        'Authorization': "Bearer dapicbe66e05adbe91737c4d2d4d33114a8f-2"
+        # Headers with the first authorization token
+        headers1 = {
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer dapib5e25919c5f4bca1c20f5e6662d65e58-2"
         }
 
-        response = requests.request("POST", selected_url, headers=headers, data=payload)
+        # Headers with the second authorization token
+        headers2 = {
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer dapi93a5b514d4fb731e7970d35985f485de-2"
+        }
+
+        # Try the first response
+        response = requests.request("POST", selected_url, headers=headers1, data=payload)
+
+        # Check if the first request was successful
+        if response.status_code != 200:
+            # If not successful, try the second response
+            response = requests.request("POST", selected_url, headers=headers2, data=payload)
         # Use the json module to load CKAN's response into a dictionary.
         response_dict = json.loads(response.text)
         return redirect(url_for('results', winery=selected_winery, category=selected_category, year=str(selected_year),

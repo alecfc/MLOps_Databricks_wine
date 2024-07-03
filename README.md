@@ -18,7 +18,10 @@ Steps to run AutoML experiments and track models with MLFlow:
 14. Wait until the experiment has finished and view and register the best performing model in MLFLow with a new model name.
 15. The model should have a Source notebook. Click on this notebook to view how the model is trained.
 16. Answer questions 6 and 7>
-17. Now let's test put our model to the test. In order to do this, you need to put the model into the Staging stage. Go to Models -> your model name -> Version 1. Finally click on Stage and Transition to Staging
+17. Let's test put our model to the test. In order to do this, you need to put the model into the Staging stage. Go to Models -> your model name -> Version 1. Finally click on Stage and Transition to Staging
 18. Now click on Use model for inference. Select Batch inference and choose the test table as test data and run your test.
 19. In the newly opened notebook, run all cells and look at the output dataframe in the last cell. How are the predictions of your model compared to the actual price? When is there a large difference and why?
-20. 
+20. For the final steps you will serve your model behind an endpoint and communicate . First go back to your model and select Use model for inference again.
+21. In the Real-time tab, create an endpoint with a similar name to your model and make sure to have Compute set to small.
+22. It will take a couple of minutes before your endpoint is ready. When it is, copy the URL and go to this website: https://winebrightcubes.azurewebsites.net/. In the website, paste your URL and fill in all the details for the bottle of wine before clicking Submit.
+23. The next page will load with a prediction of the price of the bottle of wine!

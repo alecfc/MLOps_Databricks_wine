@@ -25,3 +25,4 @@ Steps to run AutoML experiments and track models with MLFlow:
 21. In the Real-time tab, create an endpoint with a similar name to your model and make sure to have Compute set to small.
 22. It will take a couple of minutes before your endpoint is ready. When it is, copy the URL and go to this website: https://winebrightcubes.azurewebsites.net/. In the website, paste your URL and fill in all the details for the bottle of wine before clicking Submit.
 23. The next page will load with a prediction of the price of the bottle of wine!
+24. With MLFlow, you now have an easily accessible model that can be used for both real-time and batch inference. Next possible steps would be to retrain your existing model with new data, creating a new version. But considering the time we have, we believe you deserve a drink!

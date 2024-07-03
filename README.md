@@ -2,10 +2,10 @@
 This repository is meant as a demo for implementing MLOps practices in Databricks with MLFlow. Using the code in this repository, we will do this by looking at the use case of accurately predicting wine price!
 
 Steps to run AutoML experiments and track models with MLFlow:
-1. Open your workspace
+1. Go to the Databricks URL that was shared with you and open your workspace
 2. Click on Create -> Git folder
 3. Choose Github as provider and paste the repository URL: https://github.com/alecfc/MLOps_Databricks_wine.git
-4. The first step in data preparation is to setup the database and tables. Go to database_setup and run all cells (make sure to use your own name)
+4. The first step is to setup the database and tables. Go to database_setup and run all cells (make sure to use your own name for my_name)
 5. Go to Catalog and check if your database and tables are there.
 6. Go back to your workspace and open data_preprocessing. Follow the steps in this notebook.
 7. Some data preprocessing steps can be improved. We don't have much time to implement these improvements, but can you think of 3 possible improvements to the train and test data?

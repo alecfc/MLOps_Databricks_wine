@@ -93,7 +93,7 @@ def index():
                     selected_varietal,
                     None,
                     selected_alcohol_percentage,
-                    85,
+                    None,
                     None,
                     None,
                     selected_country,

@@ -1,5 +1,5 @@
 # MLOps in Databricks workshop
-This repository is meant as a demo for using MLOps in Databricks by looking at the use case of accurately predicting wine score
+This repository is meant as a demo for implementing MLOps practices in Databricks with MLFlow. Using the code in this repository, we will do this by looking at the use case of accurately predicting wine price!
 
 Steps to run AutoML experiments and track models with MLFlow:
 1. Open your workspace

@@ -83,7 +83,7 @@ def index():
                 ],
                 "data": [
                 [
-                    None,
+                    -1,
                     selected_year,
                     None,
                     selected_winery,

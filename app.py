@@ -54,9 +54,9 @@ def index():
         selected_varietal = request.form['variety']
         selected_alcohol_percentage = request.form['alcohol_percentage']
         if selected_alcohol_percentage == '':
-            selected_alcohol_percentage = 12
+            selected_alcohol_percentage = 12.0
         else:
-            selected_alcohol_percentage = float(request.form['alcohol_percentage'])
+            selected_alcohol_percentage = float(selected_alcohol_percentage)
         selected_country = request.form['country']
         selected_region = request.form['region']
         # You can add logic to process these inputs

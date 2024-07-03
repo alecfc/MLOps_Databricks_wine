@@ -14,6 +14,11 @@ Steps to run AutoML experiments and track models with MLFlow:
 10. In the Configuration Pane, choose the right ML problem, data, columns and prediction target.
 11. Go to advanced and put the Evaluation Metric on Mean-Absolute Error. **Also make sure to set the timeout at 10 minutes.** Finally, start the experiment!
 12. Answer the second question
-13. After 2-3 minutes, a button to view the data exploration notebook should appear. Click on it and explore the data using the auto=generated notebook and answer question 3 and 4.
-14. 
-15. 
+13. After 2-3 minutes, a button to view the data exploration notebook should appear. Click on it and explore the data using the auto-generated notebook and answer question 3, 4 and 5.
+14. Wait until the experiment has finished and view and register the best performing model in MLFLow with a new model name.
+15. The model should have a Source notebook. Click on this notebook to view how the model is trained.
+16. Answer questions 6 and 7>
+17. Now let's test put our model to the test. In order to do this, you need to put the model into the Staging stage. Go to Models -> your model name -> Version 1. Finally click on Stage and Transition to Staging
+18. Now click on Use model for inference. Select Batch inference and choose the test table as test data and run your test.
+19. In the newly opened notebook, run all cells and look at the output dataframe in the last cell. How are the predictions of your model compared to the actual price? When is there a large difference and why?
+20. 

@@ -111,7 +111,7 @@ def index():
         # Headers with the second authorization token
         headers2 = {
             'Content-Type': 'application/json',
-            'Authorization': "Bearer dapi93a5b514d4fb731e7970d35985f485de-2"
+            'Authorization': "Bearer dapi385f183db7b51606042a8826168025f1-2"
         }
 
         # Try the first response
